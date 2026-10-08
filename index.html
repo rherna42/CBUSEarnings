@@ -85,6 +85,7 @@ footer{margin-top:40px;font-size:.8rem;color:var(--muted);display:grid;gap:6px;m
 details.edit summary{cursor:pointer;font-size:.85rem;font-weight:600;color:var(--navy)}
 details.edit[open]{background:var(--panel);border-radius:8px;padding:12px 14px}
 details.edit[open] > div{display:grid;gap:10px;margin-top:10px}
+.callout{font-family:var(--body);font-size:.95rem;line-height:1.5;max-width:72ch;background:var(--panel);border-left:3px solid var(--bench);padding:10px 14px;border-radius:0 6px 6px 0}
 .schools{font-size:.85rem;color:var(--ink2);max-width:80ch}
 </style>
 
@@ -117,6 +118,7 @@ details.edit[open] > div{display:grid;gap:10px;margin-top:10px}
       <p class="note" id="v-desc"></p>
       <p class="schools" id="v-schools"></p>
     </div>
+    <div class="callout" id="v-note" hidden><strong>How Colorado schools report business majors.</strong> CSU Fort Collins, CU Boulder, CU Denver, UCCS and UNC each award one business degree with concentrations, and report it as a single program under code 52.02. Their finance, accounting and marketing graduates are counted there, not under those majors. For example, CU Boulder's 52.02 program ($86,441, 377 completers) includes its finance graduates. On this page, 52.02 is matched to Management. So the Management comparison includes whole business schools, and the Finance, Accounting and Marketing comparisons leave those schools out. Only DU and Regis report finance separately.</div>
     <details class="edit" id="v-edit" hidden>
       <summary id="v-editsum">Edit this list</summary>
       <div>
@@ -172,8 +174,8 @@ const others = R.filter(r=>r.i!==M);
 
 const GROUPS = [
   {k:"msu", btn:"MSU Denver majors", title:"CBUS programs among all MSU Denver majors", desc:"Every MSU Denver bachelor's program with enough completers to report, ranked."},
-  {k:"co", btn:"Other Colorado schools", title:"CBUS programs against other Colorado schools", desc:"Every bachelor's program at a Colorado institution other than MSU Denver.", filter:r=>insts[r.i][1]==="CO"},
-  {k:"comajor", btn:"Major Colorado schools", title:"CBUS programs against major Colorado universities", desc:"Six Colorado universities with established business schools. Five of them report all business graduates under one code, 52.02, so their finance and accounting graduates are counted in the Management comparison. Only DU reports majors separately.", defaults:["Colorado State University-Fort Collins","University of Colorado Boulder","University of Colorado Denver/Anschutz Medical Campus","University of Denver","University of Colorado Colorado Springs","University of Northern Colorado"]},
+  {k:"co", btn:"Other Colorado schools", title:"CBUS programs against other Colorado schools", desc:"Every bachelor's program at a Colorado institution other than MSU Denver.", note:true, filter:r=>insts[r.i][1]==="CO"},
+  {k:"comajor", btn:"Major Colorado schools", title:"CBUS programs against major Colorado universities", desc:"Six Colorado universities with established business schools.", note:true, defaults:["Colorado State University-Fort Collins","University of Colorado Boulder","University of Colorado Denver/Anschutz Medical Campus","University of Denver","University of Colorado Colorado Springs","University of Northern Colorado"]},
   {k:"peers", btn:"The 13 peers", title:"CBUS programs against the 13 CBUS peer institutions", desc:"The 13 institutions CBUS uses for comparison.", defaults:["Boise State University","California State University-Chico","California State University-Fresno","California State University-Northridge","California State University-San Bernardino","College of Charleston","Eastern Michigan University","Saint Cloud State University","University of Central Oklahoma","University of Houston-Downtown","University of Northern Iowa","Utah Valley University","Weber State University"]},
   {k:"urban", btn:"Urban regionals", title:"CBUS programs against urban-serving regionals", desc:"Thirteen broad-access public universities in metro areas, chosen informally rather than by stated criteria. Four overlap with the 13 peers: UHD, UCO, Utah Valley and Weber State.", defaults:["University of Houston-Downtown","University of Central Oklahoma","California State University-Los Angeles","California State University-Dominguez Hills","Weber State University","Utah Valley University","University of Nebraska at Omaha","Wichita State University","Portland State University","Cleveland State University","The University of Texas at San Antonio","Northeastern Illinois University","Metropolitan State University"]},
   {k:"us", btn:"All U.S. schools", title:"CBUS programs against every U.S. bachelor's program", desc:"Every bachelor's program in the federal data.", filter:()=>true}
@@ -325,6 +327,7 @@ function render(){
   document.getElementById("v-title").textContent=g.title;
   document.getElementById("v-desc").textContent=g.desc;
   document.getElementById("v-schools").textContent = g.list ? g.list.map(p=>p.replace("California State University-","CSU ").replace("University of Colorado ","CU ").replace("/Anschutz Medical Campus","")).join(" · ") : "";
+  document.getElementById("v-note").hidden = !g.note;
   editor(g);
   if(cur==="msu"){ msuTable(); rankChart(chart); }
   else { groupTable(g); stripChart(chart,g); }
